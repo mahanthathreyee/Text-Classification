@@ -2,6 +2,7 @@ import re
 import string
 import pandas as pd
 from typing import Callable
+from bs4 import BeautifulSoup
 from collections import Counter
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -12,6 +13,7 @@ _N_MOST_FREQ = 10
 _STEMMER =  PorterStemmer()
 _URL_PATTERN = re.compile(r"^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
 _STOP_WORDS = set(stopwords.words("english"))
+_SPECIAL_CHAR_PATTERN = re.compile(r'[^a-zA-Z\s]')
 #endregion
 
 #region UTILITIES
@@ -24,6 +26,14 @@ def lower_case(text: pd.Series) -> pd.Series:
     return _apply(
         text, 
         lambda s: s.lower()
+    )
+#endregion
+
+#region REMOVE DIGITS
+def remove_digits(text: pd.Series) -> pd.Series:
+    return _apply(
+        text, 
+        lambda s: ' '.join([word for word in s.split() if not word.isdigit()])
     )
 #endregion
 
@@ -84,6 +94,22 @@ def remove_urls(text: pd.Series) -> pd.Series:
     )
 #endregion
 
+#region REMOVE XML
+def remove_xml(text: pd.Series) -> pd.Series:
+    return _apply(
+        text, 
+        lambda s: BeautifulSoup(s, 'lxml').text
+    )
+#endregion
+
+#region REMOVE SPECIAL CHARACTERS
+def remove_special_char(text: pd.Series) -> pd.Series:
+    return _apply(
+        text, 
+        lambda s: _SPECIAL_CHAR_PATTERN.sub(r'', s)
+    )
+#endregion
+
 #region PREPROCESSOR MAP
 PREPROCESSOR: dict[str, Callable[[any], str]] = {
     'LOWER_CASE': lower_case,
@@ -92,6 +118,9 @@ PREPROCESSOR: dict[str, Callable[[any], str]] = {
     'REMOVE_MOST_FREQ': remove_n_most_freq_words,
     'STEM': apply_stem,
     'CONVERT_EMOTE': convert_emote,
-    'REMOVE_URLs': remove_urls
+    'REMOVE_URLs': remove_urls,
+    'REMOVE_XML': remove_xml,
+    'REMOVE_DIGITS': remove_digits,
+    'REMOVE_SPECIAL_CHAR': remove_special_char,
 }
 #endregion
