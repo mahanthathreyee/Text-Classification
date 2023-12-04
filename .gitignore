@@ -1,5 +1,7 @@
-data/aclimdb/
 temp/
+data/aclimdb/
+data/bert_trained_models
+data/jigsaw_toxic_comments/bert-base-cased
 
 env
 .vscode
