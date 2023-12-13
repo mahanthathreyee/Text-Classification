@@ -1,7 +1,8 @@
 temp/
 data/aclimdb/
-data/bert_trained_models
+data/trained_models
 data/jigsaw_toxic_comments/bert-base-cased
+data/fasttext_wiki_embeddings/
 
 env
 .vscode

@@ -112,7 +112,7 @@ loss_fn = nn.BCEWithLogitsLoss()
 loss_fn.to(device)
 scaler = torch.cuda.amp.GradScaler()
 
-def training(train_dataloader, model, optimizer, scheduler):
+def training(train_dataloader, model, optimizer, scheduler, p_train):
     model.train()
     torch.backends.cudnn.benchmark = True
     correct_predictions = 0
@@ -161,9 +161,9 @@ def validating(valid_dataloader, model, n):
     model.eval()
     correct_predictions = 0
     all_output_probs = []
+    losses = []
     
     for a in valid_dataloader:
-        losses = []
         ids = a['ids'].to(device, non_blocking = True)
         mask = a['mask'].to(device, non_blocking = True)
         output = model(ids, mask)
@@ -185,15 +185,7 @@ def validating(valid_dataloader, model, n):
     
     return losses, accuracy, all_output_probs
 
-# %% [markdown]
-# ## 8. Repeat training for k-fold
-
-# %% [markdown]
-# To improve our model we repeat the same process of training for each fold of k-folds.
-
-# %%
 best_scores = []
-
 def train_bert_model():
     for fold in tqdm(range(0,5)):
 
@@ -230,7 +222,7 @@ def train_bert_model():
         for epoch in tqdm(range(epochs)):
             print("-------------- Epoch = " + str(epoch) + "-------------")
 
-            train_loss, train_acc = training(train_dataloader, model, optimizer, scheduler)
+            train_loss, train_acc = training(train_dataloader, model, optimizer, scheduler, p_train)
             valid_loss, valid_acc, valid_probs = validating(valid_dataloader, model, len(p_valid))
 
             train_losses.append(train_loss)
@@ -284,9 +276,9 @@ def train_bert_model():
 
 if TRAIN_MODEL:
     train_bert_model()
-else:
-    model = transformers.BertForSequenceClassification.from_pretrained("bert-base-cased", num_labels = 6)
-    model.to(device)
+    
+model = transformers.BertForSequenceClassification.from_pretrained("bert-base-cased", num_labels = 6)
+model.to(device)
 
 print('Calculating test accuracy for each best model per fold')
 def predicting(test_dataloader, model, pthes):    
@@ -296,8 +288,18 @@ def predicting(test_dataloader, model, pthes):
         model.to(device)
         model.eval()
         with torch.no_grad():
-            valid_loss, valid_acc, _valid_probs = validating(test_dataloader, model, len(test))
-            print('Test losses: %.4f' %(valid_loss), 'Test accuracy: %.3f' %(valid_acc))
+            valid_loss, valid_acc, valid_probs = validating(test_dataloader, model, len(test))
+            
+            y_valid = test[['toxic', 'severe_toxic','obscene', 'threat', 'insult','identity_hate']].to_numpy().flatten()
+            valid_probs = np.asarray(valid_probs).flatten()
+            fpr, tpr, _ = roc_curve(y_valid, valid_probs)
+            valid_auc = auc(fpr, tpr)
+
+            print(
+                f'Test losses: {valid_loss}', 
+                f'Test accuracy: {valid_acc}',
+                f'AUC: {valid_auc}'
+            )
 
 pthes = [os.path.join("./",s) for s in os.listdir("./") if ".pth" in s]
 
