@@ -292,6 +292,7 @@ def predicting(test_dataloader, model, pthes):
             
             y_valid = test[['toxic', 'severe_toxic','obscene', 'threat', 'insult','identity_hate']].to_numpy().flatten()
             valid_probs = np.asarray(valid_probs).flatten()
+
             fpr, tpr, _ = roc_curve(y_valid, valid_probs)
             valid_auc = auc(fpr, tpr)
 
