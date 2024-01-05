@@ -1,0 +1,30 @@
+\subsection{Ensemble Averaging}
+
+We implemented ensemble of our individuals models. The individual models were trained separately and stored. The prediction was computed finding the average of prediction probability of each model and determining the class for the input. Let $f_i$ is the individual learners and $x$ is the input, then,
+
+\begin{gather}
+    f(x) = \mathds{1}[\frac{1}{n} \sum_i f_i(x)]
+\end{gather}
+
+The results of the ensemble averaging can be found in table \ref{tab:model_metrics_ensemble}:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+ & Test Accuracy (\%) & AUC Score (\%) & F1 Score (\%) & Precision (\%) & Recall (\%) \\
+\hline
+toxic & 94.10 & 97.90 & 95.32 & 96.61 & 94.10 \\
+severe\_toxic & 99.03 & 98.98 & 99.19 & 99.40 & 99.03 \\
+obscene & 96.08 & 98.16 & 96.31 & 96.69 & 96.08 \\
+threat & 99.72 & 99.07 & 99.67 & 99.73 & 99.72 \\
+insult & 96.38 & 97.89 & 96.60 & 97.12 & 96.38 \\
+identity\_hate & 99.26 & 99.14 & 99.34 & 99.39 & 99.26 \\
+\hline
+\textbf{Weighted Avg.} & \textbf{95.60} & \textbf{98.07} & \textbf{96.23} & \textbf{97.00} & \textbf{95.60} \\
+\hline
+\end{tabular}
+\caption{Model Evaluation Metrics of Ensemble Averaging }
+\label{tab:model_metrics_ensemble}
+\end{table}
+

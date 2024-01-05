@@ -1,0 +1,39 @@
+\section{Classification}
+
+\subsection{Logistic Regression (Baseline)}
+
+As a baseline, we employ a Logistic Regression model, a fundamental yet powerful algorithm in the realm of supervised learning. This model serves as a benchmark against which we can compare more complex algorithms. We preprocessed data as mentioned in the previous section and used the TF-IDF vectorization for getting the word vectors for training the model.
+
+
+\subsubsection{Model Training}
+
+We implemented a Logistic Regression model using a One-vs-Rest classifier to manage the multilabel nature of our dataset. This approach treats each label as a separate binary classification problem. The choice of Logistic Regression is due to its simplicity, interpretability, and efficiency in dealing with binary and linear separable data. We experimented with different hyperparameters like regularization strength to prevent overfitting and optimized the solver for better performance.
+
+\subsubsection{Results and Evaluation}
+
+The Logistic Regression model, serving as our baseline, yielded insightful results: We evaluated the model using metrics appropriate for multilabel classification, such as precision, recall, F1-score, and accuracy. These metrics provided us with a holistic view of the model's performance across all labels.
+
+    
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+ & Test Accuracy & F1 Score & AUC Score & Precision & Recall \\
+\hline
+toxic & 0.9376 & 0.9377 & 0.9572 & 0.9378 & 0.9376 \\
+severe\_toxic & 0.9934 & 0.9929 & 0.9760 & 0.9925 & 0.9934 \\
+obscene & 0.9669 & 0.9649 & 0.9716 & 0.9643 & 0.9669 \\
+threat & 0.9970 & 0.9963 & 0.9862 & 0.9961 & 0.9970 \\
+insult & 0.9634 & 0.9600 & 0.9642 & 0.9593 & 0.9634 \\
+identity\_hate & 0.9902 & 0.9877 & 0.9754 & 0.9879 & 0.9902 \\
+\hline
+\textbf{Weighted Avg.} & \textbf{0.9560} & \textbf{0.9546} & \textbf{0.9643} & \textbf{0.9543} & \textbf{0.9560} \\
+\hline
+\end{tabular}
+\caption{Model Evaluation Metrics of Logistic Regression}
+\label{tab:model_metrics}
+\end{table}
+
+
+The model demonstrated reasonable accuracy in identifying certain categories of toxicity but showed limitations in others, possibly due to class imbalance and the inherent complexity of natural language.
+

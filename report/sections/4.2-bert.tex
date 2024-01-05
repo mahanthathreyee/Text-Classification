@@ -1,0 +1,50 @@
+\subsection{BERT}
+
+Continuing to look to improve our text classification capabilities, we adopted BERT (Bidirectional Encoder Representations from Transformers), a cutting-edge model in the field of natural language processing. BERT's approach, based on deep learning and leveraging Transformer architectures, offers a sophisticated understanding of language context and semantics, making it highly suitable for complex tasks like toxic comment classification. BERT represents a significant shift in how machines understand human language. Its core innovation is its bidirectional training, which enables the model to learn context from both the left and the right sides of a token within a sentence. This is a departure from traditional models that process text in a single direction (either left-to-right or right-to-left). By understanding the bidirectional context, BERT achieves a deeper and more nuanced understanding of language.
+
+
+\subsubsection{Preprocessing and Data Preparation}
+\begin{itemize}
+    \item We preprocess our text using BERT’s tokenizer, which prepares the data into a format suitable for the model, including the addition of special tokens like [CLS] and [SEP].
+\end{itemize}
+
+\subsubsection{Model Training and Evaluation}
+\begin{itemize}
+    \item The model is fine-tuned on a subset of our dataset for efficient experimentation. We use the \texttt{bert-base-cased} model, offering a balance between size and performance.
+    \item Key Parameters:
+    \begin{itemize}
+        \item \textbf{Learning Rate}: Set at $2e^{-5}$, this rate is optimal for fine-tuning, allowing for gradual adjustments.
+        \item \textbf{Batch Size}: A moderate batch size of 32 is chosen, considering computational efficiency and memory constraints.
+        \item \textbf{Epochs}: The model undergoes training for 5 epochs, balancing the need for learning and avoiding overfitting.
+        \item \textbf{Loss Function}: \texttt{BCEWithLogitsLoss} is employed, suitable for our multi-label classification task.
+    \end{itemize}
+    \item We employ a 5-fold cross-validation strategy, ensuring the robustness of our model’s performance. Table \ref{tab:model_metrics_bert} shows the corresponding values for all the labels
+    \item Post-training, the model is evaluated on an unseen test set, using metrics such as accuracy and AUC.
+
+
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+ & Test Accuracy (\%) & AUC Score (\%) & F1 Score (\%) & Precision (\%) & Recall (\%) \\
+\hline
+toxic & 95.31 & 97.49 & 95.57 & 96.87 & 94.31 \\
+severe\_toxic & 99.29 & 99.09 & 99.33 & 99.38 & 99.29 \\
+obscene & 96.00 & 98.23 & 96.26 & 96.73 & 96.00 \\
+threat & 99.74 & 99.57 & 99.71 & 99.70 & 99.74 \\
+insult & 96.58 & 98.19 & 96.72 & 96.93 & 96.58 \\
+identity\_hate & 99.26 & 99.22 & 99.21 & 99.19 & 99.26 \\
+\hline
+\textbf{Weighted Avg.} & \textbf{96.14} & \textbf{97.99} & \textbf{96.35} & \textbf{97.06} & \textbf{95.72} \\
+\hline
+\end{tabular}
+\caption{Model Evaluation Metrics for BERT}
+\label{tab:model_metrics_bert}
+\end{table}
+
+
+
+\subsubsection{Conclusion}
+The use of BERT in our toxic comment classification project marks a significant advancement in applying advanced NLP techniques. BERT’s deep understanding of textual nuances enhances our model’s performance, setting a foundation for future explorations in model optimization and feature enhancement.

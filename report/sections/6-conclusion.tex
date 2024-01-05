@@ -1,0 +1,14 @@
+\section{Conclusion}
+
+This project explored various machine learning models for a multi-label classification problem, each offering unique strengths. Below is a summary of our findings and conclusions based on the performance metrics of each model.
+
+The Logistic Regression model showed solid performance across all metrics, with particularly high scores in the 'severe\_toxic', 'threat', and 'identity\_hate' categories. It demonstrated a balanced performance in terms of Precision and Recall, indicating a reliable prediction capability across labels. However, it exhibited slightly lower effectiveness in categories like 'toxic', which could be due to the model's linear nature.
+
+NB SVM excelled in specific categories, especially 'severe\_toxic', 'threat', and 'identity\_hate', mirroring the performance seen in LR. However, the model showed limitations in F1 Scores for some labels such as 'toxic' and 'obscene', suggesting challenges in balancing Precision and Recall for these categories. This could be due to the model's sensitivity to the class imbalance.
+
+BERT, a more advanced model, showed outstanding performance across all metrics, outperforming other models in most categories. Its strength in understanding context and nuances in language is evident from its high scores, particularly in AUC, indicating its robustness in handling false positives and negatives.
+
+LSTM's performance was noteworthy, especially in handling sequential data, which is crucial in text analysis. It showed consistent results across all categories, with a slight edge in 'severe\_toxic' and 'threat'. This model's ability to capture temporal dependencies in text data was evident in its metrics.
+The Ensemble model, combining predictions from various models, provided a well-rounded performance. It leveraged the strengths of individual models, leading to improved overall accuracy and balance in Precision and Recall. This model was particularly effective in averaging out the individual weaknesses of each model, leading to a robust classification system.
+
+In conclusion, while each model has its unique strengths, the Ensemble approach provided the most balanced and effective solution for our multi-label classification problem. BERT and LSTM showed superior performance in individual categories, highlighting the benefits of advanced models in text classification. .
